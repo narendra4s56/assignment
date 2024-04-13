@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tax Calculator</title>
+    <link rel="stylesheet" href="style.css">
+    
+</head>
+<body>
+    <div class="container">
+        <h2>Tax Calculator </h2>
+
+    
+        <form id="taxForm" onchange="validateForm()">
+            <div class="form-group">
+                <label for="income">Enter gross Annual Income:  
+                <span id="effect">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16" >
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                        <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
+                        <span id="hoverText">income is your total salary in a year before any deduction</span>
+                    </svg></label>
+                </span>
+                <input type="text" id="income" name="income" placeholder="Enter gross Annual Income" required>
+                <span class="error-icon">!</span>
+                <p class="error-info">Enter only numeric value</p>
+            </div>
+            <div class="form-group">
+                <label for="extraIncome">Enter extra income:
+                    <span id="effect">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16" >
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                            <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
+                            <span id="hoverText">income is your total salary in a year before any deduction</span>
+                        </svg></label>
+                    </span>
+                </label>
+                <input type="text" id="extraIncome" name="extraIncome" placeholder="Enter extra income">
+                <span class="error-icon">!</span> 
+                <p class="error-info">Enter only numeric value</p>
+            </div>
+            <div class="form-group">
+                <label for="deductions">Enter total applicable deductions: 
+                    <span id="effect">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16" >
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                            <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
+                            <span id="hoverText">Deductions</span>
+                        </svg></label>
+                    </span>
+                </label>
+                <input type="text" id="deductions" name="deductions" placeholder="Enter total applicable deductions">
+                
+                    <span class="error-icon" onclick="errorInfo()">!</span>
+                    <p class="error-info">Enter only numeric value</p>
+        
+            </div>
+            <div class="form-group">
+                <label for="age">Age:
+                    <span id="effect">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16" >
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                            <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
+                            <span id="hoverText">Age Group</span>
+                        </svg></label>
+                    </span>
+                </label>
+                <select id="age" name="age">
+                    <option value="<40">&lt; 40</option>
+                    <option value=">=40&<60">&ge; 40 &lt; 60</option>
+                    <option value=">=60">&ge; 60</option>
+                </select>
+               
+            </div>
+            <button type="submit" onclick="calculateTax()">Calculate Tax</button>
+        </form>
+    </div>
+
+    <div id="taxModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Your overall income will be</h3>
+            <p id="taxResult"></p>
+            <p>after tax deduction</p>
+        </div>
+    </div>
+   
+
+    <script>
+        // JavaScript code for form validation and tax calculation
+        document.addEventListener('DOMContentLoaded', function() {
+    const inputs = document.querySelectorAll('#taxForm input');
+    const selects = document.querySelectorAll('#taxForm select');
+
+    inputs.forEach(input => {
+        input.addEventListener('input', validateInput);
+    });
+
+    selects.forEach(select => {
+        select.addEventListener('change', validateInput);
+    });
+});
+
+
+
+
+function validateInput(event) {
+    const input = event.target;
+    
+    if (isNaN(input.value) && input.type === 'text' && input.value !== '') {
+        showError(input);
+    } else {
+        hideError(input);
+    }
+}
+
+function showError(input) {
+    const errorIcon = input.nextElementSibling;
+    const errorMessage = errorIcon ? errorIcon.nextElementSibling : null;
+
+    if (errorIcon && errorIcon.classList.contains('error-icon')) {
+        errorIcon.style.display = 'inline';
+
+        if (errorMessage && errorMessage.classList.contains('error-info')) {
+            errorMessage.style.display = 'none';
+
+            errorIcon.addEventListener('mouseenter', () => {
+                errorMessage.style.display = 'inline';
+            });
+
+            errorIcon.addEventListener('mouseleave', () => {
+                errorMessage.style.display = 'none';
+            });
+        }
+    }
+}
+
+
+function hideError(input) {
+    const errorIcon = input.nextElementSibling;
+    if (errorIcon && errorIcon.classList.contains('error-icon')) {
+        errorIcon.style.display = 'none';
+    }
+}
+
+        function calculateTax() {
+            const income = parseFloat(document.getElementById('income').value);
+            const extraIncome = parseFloat(document.getElementById('extraIncome').value) || 0;
+            const deductions = parseFloat(document.getElementById('deductions').value) || 0;
+            const age = document.getElementById('age').value;
+            let tax = 0;
+
+            if (income + extraIncome - deductions > 800000) {
+                const taxableAmount = income + extraIncome - deductions - 800000;
+                if (age === '<40') {
+                    tax = 0.3 * taxableAmount;
+                } else if (age === '>=40&<60') {
+                    tax = 0.4 * taxableAmount;
+                } else if (age === '>=60') {
+                    tax = 0.1 * taxableAmount;
+                }
+            }
+            let oveallincome = income + extraIncome - tax;
+            displayTaxResult(oveallincome);
+        }
+
+        function displayTaxResult(oveallincome) {
+            const taxResult = document.getElementById('taxResult');
+            taxResult.textContent = `${oveallincome.toFixed(2)}`;
+            document.getElementById('taxModal').style.display = 'block';
+        }
+
+        document.querySelector('.close').addEventListener('click', function() {
+            document.getElementById('taxModal').style.display = 'none';
+        });
+
+        window.addEventListener('click', function(event) {
+            if (event.target == document.getElementById('taxModal')) {
+                document.getElementById('taxModal').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
